@@ -72,15 +72,12 @@ class DimDataCreate(generics.CreateAPIView):
     """
     Accepts a post method to create dimensional data for a survey.
 
-    react variable = None
     """
     queryset = SurveyAdminData.objects.all()
     serializer_class = DimDataSerializer
 class ArticleCreate(generics.CreateAPIView):
     """
     Accepts a post method to create new articles.
-
-    react variable = CREATE_ARTICLE
     """
     queryset = DraftArticles.objects.all()
     # parser_classes = (MultiPartParser, FormParser)
@@ -97,7 +94,7 @@ class ArticleListView(generics.ListAPIView):
     """
     Returns an array of article objects:
 
-    [{
+    {
         "title": "The article title",
         "subject": "The article subject",
         "article": "The actual article contents",
@@ -105,13 +102,15 @@ class ArticleListView(generics.ListAPIView):
         "summary": "summary for article cards and intro",
         "references": "Data science par la pratique",
         "slug": "the-article-title"
-        },...{"For all articles in the database"}]
-
-    react variable: ARTICLE_LIST
+    }...{"For all articles in the database"}
     """
     queryset = DraftArticles.objects.all().order_by('-date_created')
     serializer_class = DraftArticleSerializer
 class ArticleCommentView(APIView):
+    """
+    Returns an array of article-comment objects:
+
+    """
     def get(self, request, *args, **kwargs):
         comments = list(ArticleComment.objects.values('owner', 'doc_title', 'disposition', 'comment', 'subject', 'comment_date'))
         # pieceKeys = list(piecesX.keys())
@@ -122,6 +121,9 @@ class ArticleCommentView(APIView):
     queryset = ArticleComment.objects.all()
     serializer_class = ArticleCommentSerializer
 class ArticleCommentCreate(generics.CreateAPIView):
+    """
+    Accepts a put method to create comments.
+    """
     permission_classes = [IsAuthenticated]
     queryset = ArticleComment.objects.all()
     serializer_class = ArticleCommentSerializer
@@ -130,14 +132,12 @@ class CodeList(generics.ListAPIView):
     """
     Returns an array of MLW code objects:
 
-    [{
-    "code": "G213",
-    "material": "Chemicals",
-    "description": "Paraffin wax",
-    "source": "Recreation"
-    },...{"For every code in the library"}]
-
-    react variable: LIST_OF_CODES
+    {
+        "code": "G213",
+        "material": "Chemicals",
+        "description": "Paraffin wax",
+        "source": "Recreation"
+    },...{"For every code in the library"}
     """
     queryset = Codes.objects.all()
     serializer_class = CodesSerializer
@@ -151,8 +151,6 @@ class CodeDetail(generics.RetrieveAPIView):
     "description": "Paraffin wax",
     "source": "Recreation"
     }
-
-    react variable: None
     """
     queryset = Codes.objects.all()
     lookup_field = "code"
@@ -205,8 +203,6 @@ class BeachDetail(generics.RetrieveAPIView):
 class BeachCreate(generics.CreateAPIView):
     """
     Accepts a post method to create a new survey location.
-
-    react variable = None
     """
     permission_classes = [IsAuthenticated]
     queryset = Beaches.objects.all()
@@ -214,8 +210,6 @@ class BeachCreate(generics.CreateAPIView):
 class SurveyList(generics.CreateAPIView):
     """
     Accepts a post method that accepts an array of survey results.
-
-    react variable = SURVEY_TO_SERVER
     """
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = SurveySerializer
@@ -246,12 +240,10 @@ class UserData(generics.ListAPIView):
         "user_permissions": []
     },...{"For every user in the group"}]
 
-
-    react variable = LIST_OF_USERS
     """
 
     permission_classes = [IsAuthenticatedOrReadOnly]
-    queryset = get_user_model().objects.all()
+    queryset = get_user_model().objects.filter(is_active=True)
     serializer_class = ViewCustomUserSerializer
 
 
@@ -278,7 +270,6 @@ class ViewPostCodeTotals(APIView):
        } .... {"for all MLW codes identified within the postal-code"},
     }...("For all postal codes")]
 
-    react variable: POST_CODE_TOTAlS
     """
     daily_totals = PiecesPerMeterLocation.post_code_totals.all()
     def get(self, request, *args, **kwargs):
@@ -313,7 +304,6 @@ class ViewCityCodeTotals(APIView):
            } .... {"for all MLW codes identified within city limits"},
         }..{"for all cities"}]
 
-    react variable: CITY_CODE_TOTALS
     """
     daily_totals = PiecesPerMeterLocation.city_code_totals.all()
     def get(self, request, *args, **kwargs):
@@ -347,8 +337,6 @@ class ViewWaterBodyCodeTotals(APIView):
                "total": 10
            } .... {"for all MLW codes identified on a body of water"},
      }...{"for all water bodies"}]
-
-    react variable: WATER_BODY_CODE_TOTAlS
     """
     daily_totals = PiecesPerMeterLocation.location_code_totals.all()
     def get(self, request, *args, **kwargs):
@@ -382,8 +370,6 @@ class ViewLitterDataPieces(APIView):
              ]
         ]
     },...{"For every location with a survey"}]
-
-    react variable: BEACH_LITTER
     """
     daily_totals = PiecesPerMeterLocation.beach_daily_pcsM.all()
     def get(self, request, *args, **kwargs):
@@ -419,8 +405,6 @@ class ViewBeachesByCategory(APIView):
          "mad-max"
         ]
     },...{"For every city, postal-code and body of water"}]
-
-    react variable:LIST_OF_BEACHES_CATEGORY
     """
     beaches_and_categories = BeachesByCategory.beaches_and_categories.all()
     def get(self, request, *args, **kwargs):
@@ -464,8 +448,6 @@ class ViewCodeTotalsByBeachAndDay(APIView):
             },... {"For each code"}
         ]
     },...{"For each beach"}
-
-    react variable: None
     """
     daily_totals = PiecesPerMeterLocation.code_data.all()
     def get(self, request, *args, **kwargs):
@@ -511,7 +493,6 @@ class ViewBeachCategories(APIView):
         ]
     },...{"For each:postal-code, rivers, lakes, cities"}]
 
-    react variable: LIST_OF_BEACHES_CATEGORY
     """
     rivers = list(BeachesByCategory.rivers.all())
     lakes = list(BeachesByCategory.lakes.all())
@@ -547,9 +528,6 @@ class ViewArticleSearchCriteria(APIView):
 
     ]
 
-    react variable: None
-
-    usagae calculating the top ten items per location/region
     """
     articles = list(ArticleSearchCriteria.article_search_criteria.all())
     def get(self, request, *args, **kwargs):
@@ -559,10 +537,6 @@ class ViewArticleSearchCriteria(APIView):
 class ViewCodeTotals(APIView):
     """
     Returns a nested dict {{"beach-name":{"code":total, "code":total}}...}
-
-    react variable: None
-
-    usagae variables used to search for articles and create links
     """
     code_totals = list(PiecesPerMeterLocation.location_code_totals.all())
     def get(self, request, *args, **kwargs):
@@ -584,11 +558,7 @@ class ViewCodeTotals(APIView):
         return Response(grouped_totals)
 class ViewLatestInventories(APIView):
     """
-    Returns a nested dict {{"beach-name":{"code":total, "code":total}}...}
-
-    react variable: None
-
-    usagae calculating the top ten items per location/region
+    Returns a nested dict returns the last three survey totals.
     """
     daily_total = list(PiecesPerMeterLocation.beach_daily_quantity.all())
     def get(self, request, *args, **kwargs):
