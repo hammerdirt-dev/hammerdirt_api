@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="articleWrapper">
+    <div class="articleCardWrapper">
+        <h5>The hammerdirt api-home</h5>
+        <h6><i>Are you looking for the hammerdirt page* ?</i></h6>
+
+        <p>
+            The hammerdirt app is located at <a href="https://www.hammerdirt.ch">https://www.hammerdirt.ch</a>. This page
+            is for accessing data with another application or program.
+       </p>
+       <div class="muted">
+           *The new application will not function with Internet Explorer or older versions of Chrome, Opera or FireFox.
+            Update your browser on all devices before trying to use the new page.
+       </div>
+        <h6>Contents:</h6>
+        <ol>
+            <li>Data format</li>
+            <li>Contact-questions</li>
+            <li>Making requests</li>
+            <li>URL and prefixes</li>
+        </ol>
+    <h6>1. Data format</h6>
+    <p>
+        The data is exported in JSON format. For non calculated or grouped queries the keys of the JSON objects correspond to
+        the field names of the original data model. Accessing the api with JavaScript or Python is very
+        straight forward. <span class="emphasis">In JS use the fetch api, in Python use the requests library.</span>
+    </p>
+    <h6>2. Contact-questions?</h6>
+    <ul>
+    <li>
+        <span class="emphasis">Requesting access:</span> send an email to roger [at] hammerdirt.ch. Let me know who you are and why you need special access.
+   </li>
+   <li>
+       <span class="emphasis">Usage:</span> this data is intended for public use. You may use it, just let people know where you got it.
+   </li>
+   <li>
+       <span class="emphasis">Contribute:</span> send an email to roger [at] hammerdirt.ch. Let me know how you would like to contribute.
+   </li>
+</ul>
+</div>
+<div class="articleCardWrapper">
+    <h6>3. Request data: JavaScript</h6>
+    <pre ><code class="language-js linenumber">// url-prefix is the current domain of the api
+const a_code = fetch('http://url-prefix/api/mlw-codes/detail/G70');
+const my_code = await a_code.then(data => data.json());
+console.log(my_code)
+output: {
+    code: "G70",
+    material: "Plastic",
+    description: "Shotgun cartridges",
+    source: "Recreation"
+}       </code></pre>
+    <h6>Request data: Python</h6>
+    <pre><code class="linenumber language-python">
+import requests
+data = requests.get('http://url-prefix/api/list-of-beaches/')
+my_data = data.json()
+my_data[:1]
+output:[{
+    "location": "A l ombre",
+    "latitude": "43.81119100",
+    "longitude": "4.64817800",
+    "city": "Beaucaire",
+    "post": "30032",
+    "country": "FR",
+    "water": "r",
+    "water_name": "Rhï¿½ne en aval",
+    "slug": "a-l-ombre",
+    "city_slug": "beaucaire",
+    "water_name_slug": "rhone-en-aval"
+},...{"For all locations in the database"}]</code></pre>
+</div>
+<div class="articleCardWrapper100">
+    <div class="articleSummary100">
+        <h6>4 URLS and prefixes</h6>
+        <h6>Get methods </h6>
+        <p>
+            The following endpoints accept a GET method and return a JSON object. For more complete examples visit
+            the hammerdirt repo on Github <a href="https://github.com/hammerdirt">hammerdirt on Github</a>.
+        </p>
+        <p>
+            If you would like the data in another grouping level or with other attributes let us know.
+        </p>
+    </div>
+   <div class="articleSummary100">
+       <div><span class="emphasis">All articles:</span> returns an array of article objects.</div>
+       <div><span class="emphasis">URL:</span> <a href={% url "list-articles" %}>{% url 'list-articles' %}</a></div>
+<pre><code class="language-js">[{
+    "title": "The article title",
+    "subject": "The article subject",
+    "article": "The actual article contents",
+    "image": "title image"
+    "summary": "summary for article cards and intro",
+    "references": "Data science par la pratique",
+    "slug": "the-article-title"
+}...{"For all articles in the database"}]
+</code></pre>
+   </div>
+   <div class="articleSummary100">
+       <div><span class="emphasis">MLW code totals per body of water:</span> returns an array of water-body objects.</div>
+       <div><span class="emphasis">URL:</span> <a href={% url "water-body-code-totals" %}>{% url 'water-body-code-totals' %}</a></div>
+<pre><code class="language-js">[{
+"location": "Lac Léman",// name of water body
+"results": [
+   {
+       "code": "G100",
+       "total": 375
+   },
+   {
+       "code": "G11",
+       "total": 10
+   } .... {"for all MLW codes identified on a body of water"},
+}...{"for all water bodies"}]
+</code></pre>
+   </div>
+   <div class="articleSummary100">
+       <div><span class="emphasis">MLW code totals per city:</span> returns an array of city code total objects.</div>
+       <div><span class="emphasis">URL:</span> <a href={% url "city-code-totals" %}>{% url 'city-code-totals' %}</a></div>
+<pre><code class="language-js">[{
+"location": "Montreux", //name of the city
+"results": [
+   {
+       "code": "G100",
+       "total": 185
+   },
+   {
+       "code": "G11",
+       "total": 11
+   } .... {"for all MLW codes identified within city limits"},
+}..{"for all cities"}]
+</code></pre>
+   </div>
+   <div class="articleSummary100">
+       <div><span class="emphasis">MLW code totals per postal-code:</span> returns an array of postal-code code total objects.</div>
+       <div><span class="emphasis">URL:</span> <a href={% url "postal-code-totals" %}>{% url 'postal-code-totals' %}</a></div>
+<pre><code class="language-js">[{
+"location": "1000", //Postal code
+"results": [
+   {
+       "code": "G100",
+       "total": 185
+   },
+   {
+       "code": "G11",
+       "total": 11
+   } .... {"for all MLW codes identified within the postal-code"},
+}...("For all postal codes")]
+</code></pre>
+   </div>
+   <div class="articleSummary100">
+       <div><span class="emphasis">List of locations:</span> returns an array of location objects, one object per location.</div>
+       <div><span class="emphasis">URL:</span> <a href={% url "list_of_beaches" %}>{% url 'list_of_beaches' %}</a></div>
+<pre><code class="language-js">[{
+    "location": "A l ombre",
+    "latitude": "43.81119100",
+    "longitude": "4.64817800",
+    "city": "Beaucaire",
+    "post": "30032",
+    "country": "FR",
+    "water": "r",
+    "water_name": "Rhï¿½ne en aval",
+    "slug": "a-l-ombre",
+    "city_slug": "beaucaire",
+    "water_name_slug": "rhone-en-aval"
+},...{"For every location with a survey"}]
+</code></pre>
+    </div>
+     <div class="articleSummary100">
+         <div><span class="emphasis">Beaches grouped by location:</span> returns an array of grouped locations, one group for each city, body of water and postal-code.</div>
+         <div><span class="emphasis">URL:</span> <a href={% url "beaches-by-location" %}>{% url 'beaches-by-location' %}</a></div>
+<pre><code class="language-js">[{
+    "location": "Rhône en aval", // the body of water
+    "beaches": [ // the survey locations at that body of water
+     "a-l-ombre",
+     "a-lombre",
+     "antimonie",
+     "antinomie",
+     "bonaparte",
+     "des-fougeres",
+     "herbes-1001",
+     "la-cavalerie",
+     "la-rampe",
+     "les-bercails",
+     "mad-max"
+]
+},...{"For every city, postal-code and body of water"}]
+</code></pre>
+     </div>
+     <div class="articleSummary100">
+         <div><span class="emphasis">Descriptive groups:</span> returns an array of grouped categodries, one group for each cities, rivers, lakes, postal-code.</div>
+         <div><span class="emphasis">URL:</span> <a href={% url "category-groups" %}>{% url 'category-groups' %}</a></div>
+<pre><code class="language-js">[{
+    "category": "lakes", // grouping level
+    "results": [ // objects that correspond
+    "Bielersee",
+    "Bodensee",
+    "Greifensee",
+    "Katzensee",
+    "Lac Lï¿½man",
+    "Neuenburgersee",
+    "not official",
+    "Quatre Cantons",
+    "Schiffenensee",
+    "Sempachsee",
+    "Sihlsee",
+    "Thunersee",
+    "Untersee",
+    "Walensee",
+    "Zugersee",
+    "Zurichsee"]},...{"For each:postal-code, rivers, lakes, cities"}]
+</code></pre>
+     </div>
+     
+     <div class="articleSummary100">
+         <div><span class="emphasis">MLW code list</span> returns an array of MLW code objects.</div>
+         <div><span class="emphasis">URL:</span> <a href={% url "mlw-code-list" %}>{% url 'mlw-code-list' %}</a></div>
+<pre><code class="language-js">[{
+    "code": "G213",
+    "material": "Chemicals",
+    "description": "Paraffin wax",
+    "source": "Recreation"
+},...{"For every code in the library"}]
+</code></pre>
+     </div>
+     <div class="articleSummary100">
+         <div><span class="emphasis">Pieces per meter per day</span> returns an array of location objects with survey totals and dates.</div>
+         <div><span class="emphasis">URL:</span> <a href={% url "pcs-m-day" %}>{% url 'pcs-m-day' %}</a></div>
+<pre><code class="language-js">[{
+"location": "baye-de-montreux-g",
+"results": [
+     [
+         "2015-11-23", // day of survey
+         5.75 // pieces per meter
+     ],
+     [
+         "2015-12-04",
+         8.4
+     ]
+]
+},...{"For every location with a survey"}]
+</code></pre>
+     </div>
+     <div class="articleSummary100">
+         <div><span class="emphasis">Results per code, per location, per survey</span> returns an array of location objects with results per mlw code per day.</div>
+         <div><span class="emphasis">URL:</span> <a href={% url "code-results" %}>{% url 'code-results' %}</a></div>
+<pre><code class="language-js">[{
+"location": "baye-de-montreux-g", // survey location
+"dailyTotals": [
+     {
+         "date": "2015-11-23", // for every survey
+         "code": "G100", // for every code indentified
+         "pcs_m": 0.02,
+         "quantity": 1
+     },
+},...{"For every survey and location"}]
+</code></pre>
+     </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

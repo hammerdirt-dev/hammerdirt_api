@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="articleWrapper" style="justify-content:center; align-items:center; height:90vh">
+    <div class="articleCardWrapper">
+        <h5>This is a custom 400 error message: that was a bad request</h5>
+        <p>Back to the app <a href="http://www.hammeridrt.ch"> hammerdirt </a></p>
+        <p>To the api <a href={% url 'index' %}>API</a><p>
+    </div>
+</div>
+{% endblock %}
