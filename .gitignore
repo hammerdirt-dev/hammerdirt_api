@@ -82,6 +82,8 @@ celerybeat-schedule
 
 # dotenv
 .env
+db-backup.sql
+
 
 # virtualenv
 .venv
@@ -107,7 +109,7 @@ media/
 *.pyc
 *.db
 *.pid
-# django migrations 
+# django migrations
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
