@@ -1,0 +1,182 @@
+
+@import url('https://fonts.googleapis.com/css?family=Rubik|Trirong&display=swap');
+
+p {
+    font-family: 'Trirong', serif;
+    font-size: calc(14px + (19 - 14) * ((100vw - 400px) / (1600 - 400)));
+}
+h1, h2, h3, h4, h5, h6, table, Body {
+    font-family: 'Rubik', sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: .5rem;
+    color:#464646;
+    margin-top: 0;
+}
+p, ul{
+    color:#36454f;
+}
+ul, li {
+font-family: 'Trirong', serif;
+font-size: calc(14px + (19 - 14) * ((100vw - 400px) / (1600 - 400)));
+}
+Body {
+    font-size: calc(14px + (19 - 14) * ((100vw - 400px) / (1600 - 400)));
+}
+h1{
+  font-size: calc(28px + (52 - 28) * ((100vw - 400px) / (1600 - 400)));
+}
+h2{
+  font-size: calc(26px + (45 - 26) * ((100vw - 400px) / (1600 - 400)));
+}
+h3{
+  font-size: calc(22px + (39 - 22) * ((100vw - 400px) / (1600 - 400)));
+}
+h4{
+  font-size: calc(20px + (32 - 20) * ((100vw - 400px) / (1600 - 400)));
+}
+h5{
+  font-size: calc(18px + (26 - 18) * ((100vw - 400px) / (1600 - 400)));
+}
+h6{
+  font-size: calc(14px + (19 - 14) * ((100vw - 400px) / (1600 - 400)));
+}
+
+
+.articleControlPos{
+    background-color:#3c6382;
+}
+
+.articleControlNeg{
+    background-color: #e55039;
+}
+.articleControlCat{
+    background-color: #e58e26;
+}
+.articleControlButton{
+    box-sizing:border-box;
+    width:100%;
+    min-height:6vh;
+    font-size:.9rem;
+    padding-top:1vh;
+    color:#ffffff;
+    text-align:center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.articleControlPos:hover, .articleControlPos:focus{
+    background: #3c6382;
+    outline: 1px solid #3c6382;
+    border: 2px dashed #ffffff;
+    outline-offset: 4px;
+    font-size: 1.1rem;
+    min-height: 8vh;
+
+}
+.articleControlNeg:hover, .articleControlNeg:focus{
+    background: #e55039;
+    outline: 1px solid #e55039;
+    border: 2px dashed #ffffff;
+    outline-offset: 4px;
+    font-size: 1.1rem;
+    min-height: 8vh;
+
+}
+.articleControlCat:hover, .articleControlCat:focus{
+    background: #e58e26;
+    outline: 1px solid #e58e26;
+    border: 2px dashed #ffffff;
+    outline-offset: 4px;
+    font-size: 1.1rem;
+    min-height: 8vh;
+
+}
+.articleWrapper{
+    display: flex;
+    flex-flow: row wrap;
+    width:100%;
+    align-self:center;
+    justify-content: flex-start;
+    align-items: baseline;
+    padding: .5rem .5rem .5rem .5rem;
+    height: auto;
+    box-sizing: border-box;
+    border:thin solid #ffffff;
+    border-radius: 4px;
+    background-color: #ffffff;
+
+}
+.articleCardWrapper {
+    box-sizing: border-box;
+    min-width:380px;
+    padding:1vw;
+    display: flex;
+    flex-flow: column nowrap;
+    position: relative;
+    background-color: #ffffff;
+    justify-content: center;
+    flex: 0 0 50%;
+    height:auto;
+}
+.articleCardWrapper100 {
+    box-sizing: border-box;
+    min-width:380px;
+    padding:1vw;
+    display: flex;
+    flex-flow: row wrap;
+    position: relative;
+    background-color: #ffffff;
+    justify-content: flex-start;
+    flex: 0 0 100%;
+    height:auto;
+}
+.articleTitle{
+    display: inline-block;
+    width:100%;
+    padding: 2% 0 2% 0;
+    box-sizing: border-box;
+    /*background-color: #fa983a;*/
+}
+.articleSubject{
+    display: inline-block;
+    width:100%;
+    padding: 1%;
+    box-sizing: border-box;
+    /*background-color: #b71540;*/
+}
+.articleSummary{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    width:100%;
+    padding: 1%;
+    box-sizing: border-box;
+    /*background-color: #1e3799;*/
+}
+.articleSummary100{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    flex: 0 0 50%;
+    padding: 1%;
+    box-sizing: border-box;
+    /*background-color: #1e3799;*/
+}
+.muted{
+    display: inline-block;
+    padding:2px 2px 2px 2px;
+    width:100%;
+    box-sizing: border-box;
+    font-size: .8rem;
+    color:#808080;
+    font-style: italic;
+    margin-bottom: 1rem;
+
+}
+.emphasis{
+    font-weight: bold;
+}
+.whiteSpace{
+    white-space: pre-wrap;
+}
