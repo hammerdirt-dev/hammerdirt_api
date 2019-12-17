@@ -54,7 +54,8 @@ coverage.xml
 
 # Django stuff:
 *.log
-local_settings.py
+hammerdirt_api/local_settings.py
+hammerdirt_api/settings.py
 
 # Flask stuff:
 instance/
@@ -84,7 +85,7 @@ celerybeat-schedule
 # dotenv
 .env
 db-backup.sql
-hammerdirt_api/local_settings.py
+
 
 
 # virtualenv
