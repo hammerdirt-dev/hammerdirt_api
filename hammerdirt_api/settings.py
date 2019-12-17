@@ -20,12 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'p^*q+5!4et*cd(##n$8ca^iw699n6=*=^gf0@o(b&hr+jy#w52'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mwshovel.pythonanywhere.com']
 
 
 # Application definition
@@ -91,23 +91,16 @@ AUTHENTICATION_BACKENDS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hammerdirt_data',
+        'NAME': 'mwshovel$hammer_data',
         'OPTIONS': {
             # Tell MySQLdb to connect with 'utf8mb4' character set
             'charset': 'utf8mb4',
         },
-        # Tell Django to build the test database with the 'utf8mb4' character set
-        'TEST': {
-            'CHARSET': 'utf8mb4',
-            'COLLATION': 'utf8mb4_unicode_ci',
-        },
-    	'USER': 'root',
-    	'PASSWORD':'pykee22',
-    	'HOST': '127.0.0.1',
-    	'PORT': '3306'
-    }
+        'USER': 'mwshovel',
+	    'PASSWORD': 'MySqL7j9',
+	    'HOST': 'mwshovel.mysql.pythonanywhere-services.com',
 }
-
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -150,7 +143,7 @@ STATIC_URL = '/static/'
 #   os.path.join(BASE_DIR, 'static/'),
 # )
 
-STATIC_ROOT = '/hammerdirt_static/'
+STATIC_ROOT = "/home/mwshovel/hammerdirt_api/static"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
