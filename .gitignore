@@ -84,7 +84,7 @@ celerybeat-schedule
 # dotenv
 .env
 db-backup.sql
-hammerdirtApi/local_settings.py
+hammerdirt_api/local_settings.py
 
 
 # virtualenv
