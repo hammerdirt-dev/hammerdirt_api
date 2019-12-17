@@ -84,9 +84,9 @@ admin.site.register(Codes, CodesAdmin)
 
 class LitterDataPiecesAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "school":
-            kwargs["queryset"] = School.objects.order_by('name')
-        return super(MyModelAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+        if db_field.name == "code":
+            kwargs["queryset"] = Codes.objects.order_by('code')
+        return super(LitterDataPiecesAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
     search_fields = ('date', )
     list_filter = ('owner',  )
     def save_model(self, request, obj, form, change):

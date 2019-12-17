@@ -1,0 +1,70 @@
+mysql> select * from all_items where location ="Rolle-plage";
++-------------+------------+--------+----------+------+------------+----------+-------+
+| location    | date       | length | quantity | code | project    | owner    | id    |
++-------------+------------+--------+----------+------+------------+----------+-------+
+| Rolle-plage | 2019-10-24 |     15 |        1 | G92  | tiger-duck | mwshovel | 16658 |
+| Rolle-plage | 2019-10-24 |     15 |        1 | G159 | tiger-duck | mwshovel | 16659 |
+| Rolle-plage | 2019-10-24 |     15 |        1 | G21  | tiger-duck | mwshovel | 16660 |
+| Rolle-plage | 2019-10-24 |     15 |       23 | G27  | tiger-duck | mwshovel | 16661 |
+| Rolle-plage | 2019-10-24 |     15 |        1 | G24  | tiger-duck | mwshovel | 16662 |
+| Rolle-plage | 2019-10-24 |     15 |        9 | G210 | tiger-duck | mwshovel | 16663 |
+| Rolle-plage | 2019-10-24 |     15 |        1 | G131 | tiger-duck | mwshovel | 16664 |
+| Rolle-plage | 2019-10-24 |     15 |        2 | G134 | tiger-duck | mwshovel | 16665 |
+| Rolle-plage | 2019-10-24 |     15 |        2 | G95  | tiger-duck | mwshovel | 16666 |
+| Rolle-plage | 2019-10-24 |     15 |        1 | G100 | tiger-duck | mwshovel | 16667 |
+| Rolle-plage | 2019-10-24 |     15 |       14 | G82  | tiger-duck | mwshovel | 16668 |
+| Rolle-plage | 2019-10-24 |     15 |        1 | G177 | tiger-duck | mwshovel | 16669 |
+| Rolle-plage | 2019-10-24 |     15 |        1 | G198 | tiger-duck | mwshovel | 16670 |
+| Rolle-plage | 2019-10-24 |     15 |       11 | G30  | tiger-duck | mwshovel | 16671 |
+| Rolle-plage | 2019-10-24 |     15 |        7 | G32  | tiger-duck | mwshovel | 16672 |
+| Rolle-plage | 2019-10-24 |     15 |        2 | G87  | tiger-duck | mwshovel | 16673 |
+| Rolle-plage | 2019-10-24 |     15 |        3 | G142 | tiger-duck | mwshovel | 16674 |
+| Rolle-plage | 2019-10-24 |     15 |        3 | G89  | tiger-duck | mwshovel | 16675 |
+| Rolle-plage | 2019-10-24 |     15 |        8 | G204 | tiger-duck | mwshovel | 16676 |
+| Rolle-plage | 2019-10-24 |     15 |        1 | G125 | tiger-duck | mwshovel | 16677 |
+| Rolle-plage | 2019-10-24 |     15 |       52 | G79  | tiger-duck | mwshovel | 16678 |
+| Rolle-plage | 2019-10-24 |     15 |        1 | G148 | tiger-duck | mwshovel | 16679 |
++-------------+------------+--------+----------+------+------------+----------+-------+
+
+mysql> select * from beaches where location="Rolle-plage";
++-------------+-------------+------------+-------+------+-------+------------+------------+----------+
+| Location    | latitude    | longitude  | city  | post | water | water_name | project    | owner    |
++-------------+-------------+------------+-------+------+-------+------------+------------+----------+
+| Rolle-plage | 46.46130000 | 6.34973900 | Rolle | 1180 | l     | Lac-Léman  | tiger-duck | mwshovel |
++-------------+-------------+------------+-------+------+-------+------------+------------+----------+
+1 row in set (0.01 sec)
+
+mysql> select * from beaches where location ="Parc-des-Pierrettes";
++---------------------+-------------+------------+---------------+------+-------+------------+---------+----------+
+| Location            | latitude    | longitude  | city          | post | water | water_name | project | owner    |
++---------------------+-------------+------------+---------------+------+-------+------------+---------+----------+
+| Parc-des-Pierrettes | 46.51521500 | 6.57553100 | Saint-Sulpice | 1025 | l     | Lac-Léman  | MCBP    | mwshovel |
++---------------------+-------------+------------+---------------+------+-------+------------+---------+----------+
+1 row in set (0.00 sec)
+
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        1 | G133 | tiger-duck | mwshovel | 16635 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        3 | G93  | tiger-duck | mwshovel | 16636 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |       13 | G79  | tiger-duck | mwshovel | 16637 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        2 | G159 | tiger-duck | mwshovel | 16638 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        1 | G70  | tiger-duck | mwshovel | 16639 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |       14 | G67  | tiger-duck | mwshovel | 16640 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        1 | G98  | tiger-duck | mwshovel | 16641 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |       70 | G82  | tiger-duck | mwshovel | 16642 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        4 | G30  | tiger-duck | mwshovel | 16643 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        5 | G204 | tiger-duck | mwshovel | 16644 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |       12 | G208 | tiger-duck | mwshovel | 16645 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        3 | G32  | tiger-duck | mwshovel | 16646 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        9 | G89  | tiger-duck | mwshovel | 16647 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        3 | G33  | tiger-duck | mwshovel | 16648 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        1 | G191 | tiger-duck | mwshovel | 16649 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        2 | G87  | tiger-duck | mwshovel | 16650 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        1 | G96  | tiger-duck | mwshovel | 16651 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        2 | G10  | tiger-duck | mwshovel | 16652 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        1 | G99  | tiger-duck | mwshovel | 16653 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        9 | G100 | tiger-duck | mwshovel | 16654 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        1 | G178 | tiger-duck | mwshovel | 16655 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        1 | G19  | tiger-duck | mwshovel | 16656 |
+| Parc-des-Pierrettes | 2019-10-10 |     30 |        1 | G213 | tiger-duck | mwshovel | 16657 |
++---------------------+------------+--------+----------+------+------------+----------+-------+
+88 rows in set (0.02 sec)
+mysql>
