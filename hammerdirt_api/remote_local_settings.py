@@ -91,13 +91,13 @@ AUTHENTICATION_BACKENDS = (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mwshovel$hammer_data',
+        'NAME': os.getenv('DATA_BASE_NAME'),
         'OPTIONS': {
             # Tell MySQLdb to connect with 'utf8mb4' character set
             'charset': 'utf8mb4',
         },
         'USER': 'mwshovel',
-	    'PASSWORD': 'MySqL7j9',
+	    'PASSWORD': os.getenv('DATA_BASE_PASS'),
 	    'HOST': 'mwshovel.mysql.pythonanywhere-services.com',
 }
 }
