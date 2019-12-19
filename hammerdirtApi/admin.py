@@ -67,8 +67,8 @@ class LocationFilter(SimpleListFilter):
         return queryset.filter(water_name=self.value())
 
 class BeachesAdmin(admin.ModelAdmin):
-    # list_filter = (LocationFilter,)
-    search_fields = ('city','water_name')
+    list_filter = ('water_name',)
+    search_fields = ['city','water_name']
     def save_model(self, request, obj, form, change):
         obj.owner = request.user
         super().save_model(request, obj, form, change)
@@ -76,7 +76,7 @@ class BeachesAdmin(admin.ModelAdmin):
 admin.site.register(Beaches, BeachesAdmin)
 
 class CodesAdmin(admin.ModelAdmin):
-    search_fields = ('code', 'material', 'source', )
+    search_fields = ['code', 'material', 'source','description']
     def save_model(self, request, obj, form, change):
         obj.owner = request.user
         super().save_model(request, obj, form, change)
@@ -88,8 +88,8 @@ class LitterDataPiecesAdmin(admin.ModelAdmin):
         if db_field.name == "code":
             kwargs["queryset"] = Codes.objects.order_by('code')
         return super(LitterDataPiecesAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
-    search_fields = ('date', )
-    list_filter = ('owner',  )
+    search_fields = ['date','location__water_name_slug','location__city_slug', 'location__location']
+    list_filter = ('owner','location__water_name')
     def save_model(self, request, obj, form, change):
         obj.owner = request.user
         super().save_model(request, obj, form, change)
@@ -107,7 +107,7 @@ admin.site.register(References, ReferencesAdmin)
 
 class DraftArticlesAdmin(admin.ModelAdmin):
     search_fields = ('subject', )
-    list_filter =('owner', )
+    list_filter =('owner','subject' )
     def save_model(self, request, obj, form, change):
         obj.owner = request.user
         super().save_model(request, obj, form, change)
