@@ -11,7 +11,8 @@ from .models import (
     Codes,
     LitterDataPieces,
     References,
-    DraftArticles
+    DraftArticles,
+    ArticleComment
     )
 
 class CustomUserAdmin(UserAdmin):
@@ -112,3 +113,11 @@ class DraftArticlesAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
     readonly_fields = ('owner','slug')
 admin.site.register(DraftArticles, DraftArticlesAdmin)
+class ArticleCommentAdmin(admin.ModelAdmin):
+    search_fields = ('subject', 'disposition')
+    list_filter=('owner','disposition')
+    def save_model(self, request, obj, form, change):
+        obj.owner = request.user
+        super().save_model(request, obj, form, change)
+    readonly_fields = ('owner',)
+admin.site.register(ArticleComment, ArticleCommentAdmin)

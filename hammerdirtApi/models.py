@@ -229,13 +229,6 @@ class LitterDataPieces(OwnedModel):
         null=False,
         default=1
         )
-    # area = models.DecimalField(
-    #     db_column='area',
-    #     max_digits=6,
-    #     decimal_places=2,
-    #     blank=True,
-    #     null=True
-    #     )
     quantity = models.IntegerField(
         db_column='quantity',
         blank=False,
@@ -473,7 +466,7 @@ class ArticleComment(OwnedModel):
         default="This needs a summary"
         )
     def __str__(self):
-        return u"doc_title:%s, subject:%s, disposition:%s, comment_date:%s, comment:%s, owner:%s" %(self.doc_title, self.subject, self.disposition, self.comment_date, self.comment, self.owner_username)
+        return u"doc_title:%s, subject:%s, disposition:%s, comment_date:%s, comment:%s, owner:%s" %(self.doc_title, self.subject, self.disposition, self.comment_date, self.comment, self.owner)
     class Meta:
         db_table = "article_comments"
         managed = True
