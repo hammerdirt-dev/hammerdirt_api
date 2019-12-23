@@ -54,8 +54,6 @@ def api_home(request):
 class AreWeHere(APIView):
     def get(self, request, *args, **kwargs):
         on_or_not =  [{"status":"true", "reply":"You can proceed"}]
-        # grouped_totals = group_codes(self, self.code_totals)
-        # json_ed = json.dumps(grouped_totals)
         return Response(on_or_not)
 
 
@@ -66,6 +64,7 @@ class CodeCreate(generics.CreateAPIView):
 
     react variable = None
     """
+    permission_classes = [IsAuthenticated]
     queryset = Codes.objects.all()
     serializer_class = CodesSerializer
 class DimDataCreate(generics.CreateAPIView):
@@ -73,19 +72,21 @@ class DimDataCreate(generics.CreateAPIView):
     Accepts a post method to create dimensional data for a survey.
 
     """
+    permission_classes = [IsAuthenticated]
     queryset = SurveyAdminData.objects.all()
     serializer_class = DimDataSerializer
 class ArticleCreate(generics.CreateAPIView):
     """
     Accepts a post method to create new articles.
     """
+    permission_classes = [IsAuthenticated]
     queryset = DraftArticles.objects.all()
-    # parser_classes = (MultiPartParser, FormParser)
     serializer_class = DraftArticleSerializer
 class ArticleUpdate(generics.RetrieveUpdateAPIView):
     """
     Accepts a put method to update existing articles.
     """
+    permission_classes = [IsAuthenticated]
     queryset = DraftArticles.objects.all()
     lookup_field = "slug"
     serializer_class = DraftArticleSerializer
@@ -113,8 +114,6 @@ class ArticleCommentView(APIView):
     """
     def get(self, request, *args, **kwargs):
         comments = list(ArticleComment.objects.values('owner', 'doc_title', 'disposition', 'comment', 'subject', 'comment_date'))
-        # pieceKeys = list(piecesX.keys())
-        # theJson = [{'location':x, 'results':piecesX[x]} for x in pieceKeys]
         return Response(comments)
 
 
@@ -218,7 +217,6 @@ class SurveyList(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-
         return Response(serializer.data)
 class UserData(generics.ListAPIView):
     """
@@ -241,7 +239,6 @@ class UserData(generics.ListAPIView):
     },...{"For every user in the group"}]
 
     """
-
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = get_user_model().objects.filter(is_active=True)
     serializer_class = ViewCustomUserSerializer
@@ -498,7 +495,6 @@ class ViewBeachCategories(APIView):
     lakes = list(BeachesByCategory.lakes.all())
     cities = list(BeachesByCategory.cities.all())
     postal = list(BeachesByCategory.postal_codes.all())
-
     def get(self, request, *args, **kwargs):
         def make_dict(self):
             the_dict = [{
@@ -533,7 +529,6 @@ class ViewArticleSearchCriteria(APIView):
     def get(self, request, *args, **kwargs):
         the_list = self.articles
         return Response(the_list)
-
 class ViewCodeTotals(APIView):
     """
     Returns a nested dict {{"beach-name":{"code":total, "code":total}}...}
@@ -563,8 +558,6 @@ class ViewLatestInventories(APIView):
     daily_total = list(PiecesPerMeterLocation.beach_daily_quantity.all())
     def get(self, request, *args, **kwargs):
         last_three = self.daily_total[:3]
-        # grouped_totals = group_codes(self, self.code_totals)
-        # json_ed = json.dumps(grouped_totals)
         return Response(last_three)
 class DimDataView(APIView):
 
@@ -573,18 +566,3 @@ class DimDataView(APIView):
         # grouped_totals = group_codes(self, self.code_totals)
         # json_ed = json.dumps(grouped_totals)
         return Response(dim_data)
-
-# class ViewLatestComments(APIView):
-#     """
-#     Returns a nested dict {{"beach-name":{"code":total, "code":total}}...}
-#
-#     react variable: None
-#
-#     usagae calculating the top ten items per location/region
-#     """
-#     comments = list(CommentSearchCriteria.comment_search_list.all())
-#     def get(self, request, *args, **kwargs):
-#         comments = self.daily_total[:3]
-#         # grouped_totals = group_codes(self, self.code_totals)
-#         # json_ed = json.dumps(grouped_totals)
-#         return Response(comments)
