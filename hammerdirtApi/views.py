@@ -545,6 +545,7 @@ class ViewCodeTotals(APIView):
                     "postCode":el["location__post"],
                     "code":el['code'],
                     "total":el['total'],
+                    "date":el['date']
                     })
 
             return new

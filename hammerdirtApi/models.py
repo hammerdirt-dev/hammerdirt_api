@@ -277,7 +277,7 @@ class PostCodeTotals(models.Manager):
         return super().get_queryset().values("location__post", "code").annotate(total = Sum("quantity"))
 class GroupedLocationsCode(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().values_list("location", "date", "code", "pcs_m", "quantity")
+        return super().get_queryset().values_list("location", "date", "code", "pcs_m", "quantity").order_by('-date','location')
 class LocationCodeTotals(models.Manager):
     def get_queryset(self):
         return super().get_queryset().values("location__water_name","code").annotate(total = Sum("quantity"))
