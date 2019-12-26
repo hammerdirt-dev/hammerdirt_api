@@ -286,7 +286,7 @@ class BeachDailyPcsM(models.Manager):
         return super().get_queryset().values("location", "date").annotate(daily_pcsm=Sum("pcs_m")).order_by('date')
 class BeachDailyQuanity(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().values("location", "date").annotate(daily_total=Sum("quantity")).order_by('-date')
+        return super().get_queryset().values("location", "date", "owner").annotate(daily_total=Sum("quantity")).order_by('-date')
 class PiecesPerMeterLocation(LitterDataPieces):
     """
     Returns the sum of pieces per meter per location per survey
