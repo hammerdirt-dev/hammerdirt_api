@@ -86,7 +86,7 @@ class ArticleUpdate(generics.RetrieveUpdateAPIView):
     """
     Accepts a put method to update existing articles.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = DraftArticles.objects.all()
     lookup_field = "slug"
     serializer_class = DraftArticleSerializer
