@@ -396,7 +396,7 @@ class DraftArticles(OwnedModel):
         max_length=200,
         default="This needs a summary"
         )
-    references = JSONField()
+    # references = JSONField()
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
