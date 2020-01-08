@@ -191,13 +191,21 @@ class Beaches(OwnedModel):
         db_table = 'beaches'
         ordering = ['location']
         verbose_name_plural = 'Beaches'
+class SwissLocations(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(country="Switzerland")
+class SwissBeaches(Beaches):
+    class Meta:
+        proxy = True
+    swiss_beaches = SwissLocations()
+    
 class Codes(OwnedModel):
     """
     MLW codes and decriptions
     """
     code = models.CharField(db_column='code', max_length=5, primary_key=True, blank=False, null=False, default='Code')
     material = models.CharField(db_column='material', max_length=30, blank=False, null=False, default='An MLW material type')
-    description = models.CharField(db_column='description', max_length=30, blank=False, null=False, default='Describe the item')
+    description = models.CharField(db_column='description', max_length=100, blank=False, null=False, default='Describe the item')
     source = models.CharField(db_column='source', max_length=30, blank=False, null=False, default='Where does it come from')
     def __str__(self):
         return u'%s, %s' %(self.description, self.code)
