@@ -94,6 +94,10 @@ class OwnedModel(models.Model):
 
     class Meta:
         abstract=True
+class SwissLocations(models.Manager):
+    print("calling swiss locations")
+    def get_queryset(self):
+        return super().get_queryset().filter(country="CH")
 class Beaches(OwnedModel):
     """
     Beach names and gps data.
@@ -177,6 +181,18 @@ class Beaches(OwnedModel):
         blank=False,
         default=''
         )
+    objects = models.Manager()
+    swiss_beaches = SwissLocations()
+    def swiss_categories():
+        return Beaches.swiss_beaches.values_list('water_name','city','post','country','slug')
+    def swiss_lakes():
+        return Beaches.swiss_beaches.filter(water='l').order_by("water_name").values_list("water_name", flat=True).distinct()
+    def swiss_rivers():
+        return Beaches.swiss_beaches.filter(water='r').order_by("water_name").values_list("water_name", flat=True).distinct()
+    def swiss_cities():
+        return Beaches.swiss_beaches.order_by("city").values_list('city', flat=True).distinct()
+    def swiss_post():
+        return Beaches.swiss_beaches.order_by("post").values_list('post', flat=True).distinct()
     def save(self, *args, **kwargs):
         self.slug = slugify(self.location)
         self.city_slug = slugify(self.city)
@@ -185,20 +201,12 @@ class Beaches(OwnedModel):
     def getBeachesOwner(self, user):
         return Beaches.objects.filter(owner__username=user).values('slug')
     def __str__(self):
-        return u'location:%s'%(self.location)
+        return u'location:%s, location_slug:%s, water_name:%s, water_name_slug:%s, country:%s'%(self.location, self.slug, self.water_name, self.water_name_slug, self.country)
     class Meta:
         managed = True
         db_table = 'beaches'
         ordering = ['location']
         verbose_name_plural = 'Beaches'
-class SwissLocations(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(country="Switzerland")
-class SwissBeaches(Beaches):
-    class Meta:
-        proxy = True
-    swiss_beaches = SwissLocations()
-    
 class Codes(OwnedModel):
     """
     MLW codes and decriptions
@@ -332,6 +340,39 @@ class BeachesByCategory(Beaches):
     rivers = Rivers()
     cities = Cities()
     postal_codes = PostalCodes()
+# begin Switzerland only
+class SwissCityCodeTotals(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(location__country='CH').values("location__city", "code").annotate(total = Sum("quantity"))
+class SwissPostCodeTotals(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(location__country='CH').values("location__post", "code").annotate(total = Sum("quantity"))
+class SwissGroupedLocationsCode(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(location__country='CH').values_list("location", "date", "code", "pcs_m", "quantity").order_by('-date','location')
+class SwissLocationCodeTotals(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(location__country='CH').values("location__water_name","code").annotate(total = Sum("quantity"))
+class SwissBeachDailyPcsM(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(location__country='CH').values("location", "date").annotate(daily_pcsm=Sum("pcs_m")).order_by('date')
+class SwissBeachDailyQuanity(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(location__country='CH').values("location", "date", "owner").annotate(daily_total=Sum("quantity")).order_by('-date')
+class SwissPiecesPerMeterLocation(LitterDataPieces):
+    """
+    Returns the sum of pieces per meter per location per survey
+    """
+    objects = models.Manager()
+    city_code_totals = SwissCityCodeTotals()
+    post_code_totals = SwissPostCodeTotals()
+    code_data = SwissGroupedLocationsCode()
+    location_code_totals = SwissLocationCodeTotals()
+    beach_daily_pcsM = SwissBeachDailyPcsM()
+    beach_daily_quantity = SwissBeachDailyQuanity()
+    class Meta:
+        proxy = True
+#
 class References(OwnedModel):
     """
     The library or reading list for hammerdirt projects and articles.

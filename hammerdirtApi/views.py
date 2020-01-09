@@ -32,7 +32,9 @@ from .models import (
     ArticleSearchCriteria,
     ArticleComment,
     SurveyAdminData,
-    SurveyAdminViews
+    SurveyAdminViews,
+    SwissPiecesPerMeterLocation,
+
 )
 from rest_framework.renderers import JSONRenderer
 from rest_framework import (
@@ -177,6 +179,10 @@ class BeachList(generics.ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Beaches.objects.all()
     serializer_class = BeachesSerializer
+class SwissBeachList(generics.ListAPIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = Beaches.swiss_beaches.all()
+    serializer_class = BeachesSerializer
 class BeachDetail(generics.RetrieveAPIView):
     """
     Returns one survey location object:
@@ -283,6 +289,66 @@ class ViewPostCodeTotals(APIView):
         pieceKeys = list(piecesX.keys())
         theJson = [{'location':x, 'results':piecesX[x]} for x in pieceKeys]
         return Response(theJson)
+class ViewSwissPostCodeTotals(APIView):
+    """
+    Returns an array of post-code code total objects. Each object contains the total count for the MLW
+    codes indentified within a postal-code. Same structure as ViewPostCodeTotals.
+    """
+    daily_totals = SwissPiecesPerMeterLocation.post_code_totals.all()
+    def get(self, request, *args, **kwargs):
+        pieces = self.daily_totals
+        def make_dict(self,a):
+            new={}
+            for element in a:
+                if element['location__post'] in list(new.keys()):
+                    new[element['location__post']].append({'code':element['code'], 'total':element['total']})
+                else:
+                    new.update({element['location__post']:[{'code':element['code'], 'total':element['total']}]})
+            return new
+        piecesX = make_dict(self, pieces)
+        pieceKeys = list(piecesX.keys())
+        theJson = [{'location':x, 'results':piecesX[x]} for x in pieceKeys]
+        return Response(theJson)
+class ViewSwissCityCodeTotals(APIView):
+    """
+    Returns an array of city code total objects. Each object contains the total count for the MLW
+    codes indentified within a city limit. Same structure as ViewCityCodeTotals.
+    """
+    daily_totals = SwissPiecesPerMeterLocation.city_code_totals.all()
+    def get(self, request, *args, **kwargs):
+        pieces = self.daily_totals
+        def make_dict(self,a):
+            new={}
+            for element in a:
+                if element['location__city'] in list(new.keys()):
+                    new[element['location__city']].append({'code':element['code'], 'total':element['total']})
+                else:
+                    new.update({element['location__city']:[{'code':element['code'], 'total':element['total']}]})
+            return new
+        piecesX = make_dict(self, pieces)
+        pieceKeys = list(piecesX.keys())
+        theJson = [{'location':x, 'results':piecesX[x]} for x in pieceKeys]
+        return Response(theJson)
+class ViewSwissWaterBodyCodeTotals(APIView):
+    """
+    Returns an array of water body code total objects. Each object contains the total count for the MLW
+    codes indentified on the shores of the requested body of water. Same structure as WaterBodyCodeTotals.
+    """
+    daily_totals = SwissPiecesPerMeterLocation.location_code_totals.all()
+    def get(self, request, *args, **kwargs):
+        pieces = self.daily_totals
+        def make_dict(self,a):
+            new={}
+            for element in a:
+                if element['location__water_name'] in list(new.keys()):
+                    new[element['location__water_name']].append({'code':element['code'], 'total':element['total']})
+                else:
+                    new.update({element['location__water_name']:[{'code':element['code'], 'total':element['total']}]})
+            return new
+        piecesX = make_dict(self, pieces)
+        pieceKeys = list(piecesX.keys())
+        theJson = [{'location':x, 'results':piecesX[x]} for x in pieceKeys]
+        return Response(theJson)
 class ViewCityCodeTotals(APIView):
     """
     Returns an array of city code total objects. Each object contains the total count for the MLW
@@ -383,6 +449,26 @@ class ViewLitterDataPieces(APIView):
         pieceKeys = list(piecesX.keys())
         theJson = [{'location':x, 'results':piecesX[x]} for x in pieceKeys]
         return Response(theJson)
+class ViewSwissLitterDataPieces(APIView):
+    """
+    Returns an array of location daily total objects. Each object contains the total pcs_m per survey.
+    Same structure as ViewLitterDataPieces.
+    """
+    daily_totals = SwissPiecesPerMeterLocation.beach_daily_pcsM.all()
+    def get(self, request, *args, **kwargs):
+        pieces = self.daily_totals
+        def make_dict(self,a):
+            new={}
+            for element in a:
+                if element['location'] in list(new.keys()):
+                    new[element['location']].append([element['date'], element['daily_pcsm']])
+                else:
+                    new.update({element['location']:[[element['date'], element['daily_pcsm']]]})
+            return new
+        piecesX = make_dict(self, pieces)
+        pieceKeys = list(piecesX.keys())
+        theJson = [{'location':x, 'results':piecesX[x]} for x in pieceKeys]
+        return Response(theJson)
 class ViewBeachesByCategory(APIView):
     """Returns an array of grouped beach objects. The beaches are grouped according to different criteria:
 
@@ -404,6 +490,32 @@ class ViewBeachesByCategory(APIView):
     },...{"For every city, postal-code and body of water"}]
     """
     beaches_and_categories = BeachesByCategory.beaches_and_categories.all()
+    def get(self, request, *args, **kwargs):
+        beaches = self.beaches_and_categories
+        def make_dict(self,a,n):
+            new={}
+            for element in a:
+             if element[n] in new.keys():
+                 new[element[n]].append(element[4])
+             else:
+                 new.update({element[n]:[element[4]]})
+            return new
+        def combined(self):
+            new = {}
+            for i in [0,1,2,3]:
+              a_dict = make_dict(self, beaches, i)
+              new.update(a_dict)
+            return new
+        these_beaches = combined(self)
+        location_keys = these_beaches.keys()
+        places_beaches = [{'location':x, 'beaches':these_beaches[x]} for x in location_keys]
+        return Response(places_beaches)
+class ViewSwissBeachesByCategory(APIView):
+    """
+    Returns an array of grouped beach objects. The beaches are grouped according to different criteria.
+    Same structure as ViewBeachesByCategory and the same criteria: city, river or lake name, and postal-code.
+    """
+    beaches_and_categories = Beaches.swiss_categories()
     def get(self, request, *args, **kwargs):
         beaches = self.beaches_and_categories
         def make_dict(self,a,n):
@@ -464,6 +576,29 @@ class ViewCodeTotalsByBeachAndDay(APIView):
         pieces = make_dict(self, pieces)
         serializer = pieces
         return Response(serializer)
+class ViewSwissCodeTotalsByBeachAndDay(APIView):
+    """
+    Returns an array of nested dicts of survey results grouped by location, date and code. Same structure as
+    ViewCodeTotalsByBeachAndDay.
+    """
+    daily_totals = SwissPiecesPerMeterLocation.code_data.all()
+    def get(self, request, *args, **kwargs):
+        pieces = self.daily_totals
+        def make_dict(self,a):
+            new={}
+            location ={}
+            for element in a:
+                if element[0] in new.keys():
+                    new[element[0]].append({"date":element[1], "code":element[2], "pcs_m":element[3], "quantity":element[4]})
+                else:
+                    new.update({element[0]:[{"date":element[1], "code":element[2], "pcs_m":element[3], "quantity":element[4]}]})
+            the_new_keys = list(new.keys())
+            out = [{"location":x, "dailyTotals":new[x]} for x in the_new_keys]
+            # out = [new]
+            return out
+        pieces = make_dict(self, pieces)
+        serializer = pieces
+        return Response(serializer)
 class ViewBeachCategories(APIView):
     """
     Returns  a list of dicts [{lakes:[list of all the lakes by name]},...{cities:[list of all...]}]
@@ -489,12 +624,42 @@ class ViewBeachCategories(APIView):
         "Zurichsee"
         ]
     },...{"For each:postal-code, rivers, lakes, cities"}]
-
     """
     rivers = list(BeachesByCategory.rivers.all())
     lakes = list(BeachesByCategory.lakes.all())
     cities = list(BeachesByCategory.cities.all())
     postal = list(BeachesByCategory.postal_codes.all())
+    def get(self, request, *args, **kwargs):
+        def make_dict(self):
+            the_dict = [{
+                'category':'lakes',
+                'results':self.lakes
+                },
+                {
+                'category':'cities',
+                'results':self.cities
+                },
+                {
+                'category':'post',
+                'results':self.postal
+                },
+                {
+                'category':'rivers',
+                'results':self.rivers
+                }]
+            return the_dict
+        data = make_dict(self)
+        return Response(data)
+class ViewSwissBeachCategories(APIView):
+    """
+    Returns  a list of dicts [{lakes:[list of all the lakes by name]},...{cities:[list of all...]}].
+
+    Same structure as ViewBeachesByCategory but output is filtered to Switzerland only.
+    """
+    rivers = list(Beaches.swiss_rivers())
+    lakes = list(Beaches.swiss_lakes())
+    cities = list(Beaches.swiss_cities())
+    postal = list(Beaches.swiss_post())
     def get(self, request, *args, **kwargs):
         def make_dict(self):
             the_dict = [{
@@ -523,7 +688,6 @@ class ViewArticleSearchCriteria(APIView):
         {article_title:"a title", article_subject:"subject", article_slug:"slug", article_owner:"owner"}
 
     ]
-
     """
     articles = list(ArticleSearchCriteria.article_search_criteria.all())
     def get(self, request, *args, **kwargs):
@@ -552,11 +716,42 @@ class ViewCodeTotals(APIView):
         grouped_totals = group_codes(self, self.code_totals)
         json_ed = json.dumps(grouped_totals)
         return Response(grouped_totals)
+class ViewSwissCodeTotals(APIView):
+    """
+    Returns a nested dict {{"beach-name":{"code":total, "code":total}}...}
+    """
+    code_totals = list(SwissPiecesPerMeterLocation.location_code_totals.all())
+    def get(self, request, *args, **kwargs):
+        def group_codes(self, a):
+            new = []
+            for el in a:
+                new.append({
+                    "location":el['location'],
+                    "waterName":el["location__water_name"],
+                    "cityName":el["location__city"],
+                    "postCode":el["location__post"],
+                    "code":el['code'],
+                    "total":el['total'],
+                    "date":el['date']
+                    })
+
+            return new
+        grouped_totals = group_codes(self, self.code_totals)
+        json_ed = json.dumps(grouped_totals)
+        return Response(grouped_totals)
 class ViewLatestInventories(APIView):
     """
     Returns a nested dict returns the last three survey totals.
     """
     daily_total = list(PiecesPerMeterLocation.beach_daily_quantity.all())
+    def get(self, request, *args, **kwargs):
+        last_three = self.daily_total[:3]
+        return Response(last_three)
+class ViewLatestSwissInventories(APIView):
+    """
+    Returns a nested dict returns the last three survey totals.
+    """
+    daily_total = list(SwissPiecesPerMeterLocation.beach_daily_quantity.all())
     def get(self, request, *args, **kwargs):
         last_three = self.daily_total[:3]
         return Response(last_three)
