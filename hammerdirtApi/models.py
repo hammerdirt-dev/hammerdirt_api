@@ -215,6 +215,10 @@ class Codes(OwnedModel):
     material = models.CharField(db_column='material', max_length=30, blank=False, null=False, default='An MLW material type')
     description = models.CharField(db_column='description', max_length=100, blank=False, null=False, default='Describe the item')
     source = models.CharField(db_column='source', max_length=30, blank=False, null=False, default='Where does it come from')
+    source_two = models.CharField(db_column='source_two', max_length=30, blank=False, null=False, default='Where does it come from')
+    single_use = models.BooleanField(db_column='single_use', default=False)
+    micro = models.BooleanField(db_column='micro', default=False)
+
     def __str__(self):
         return u'%s, %s' %(self.description, self.code)
     class Meta:
