@@ -58,7 +58,7 @@ coverage.xml
 hammerdirt_api/local_settings.py
 hammerdirt_api/settings.py
 datatoinput.txt
-
+hammerdirtApi/oldmigrations/**
 
 # Flask stuff:
 instance/
