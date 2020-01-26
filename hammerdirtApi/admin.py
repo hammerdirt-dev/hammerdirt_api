@@ -12,9 +12,9 @@ from .models import (
     LitterDataPieces,
     References,
     DraftArticles,
-    ArticleComment
-    )
-
+    ArticleComment,
+    SurveyAdminData
+)
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
@@ -113,6 +113,15 @@ class DraftArticlesAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
     readonly_fields = ('owner','slug')
 admin.site.register(DraftArticles, DraftArticlesAdmin)
+class SurveyAdminDataAdmin(admin.ModelAdmin):
+    search_fields = ('subject', )
+    list_filter =('owner','location' )
+    def save_model(self, request, obj, form, change):
+        obj.owner = request.user
+        super().save_model(request, obj, form, change)
+    readonly_fields = ('owner',)
+admin.site.register(SurveyAdminData, SurveyAdminDataAdmin)
+
 class ArticleCommentAdmin(admin.ModelAdmin):
     search_fields = ('subject', 'disposition')
     list_filter=('owner','disposition')
