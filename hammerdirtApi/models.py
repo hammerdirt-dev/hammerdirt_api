@@ -595,7 +595,7 @@ class SurveyAdminData(OwnedModel):
         default=0
         )
     time_minutes = models.IntegerField(
-        db_column='num_parts_other',
+        db_column='time_minutes',
         blank=False,
         null=False,
         default=0
@@ -609,7 +609,7 @@ class SurveyAdminData(OwnedModel):
         verbose_name_plural = 'Survey dimensions'
 class SurveyAdminValues(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().order_by("date").values('location', 'date', 'length','owner', 'mac_plast_w','mic_plas_w', 'area')
+        return super().get_queryset().order_by("date").values('location', 'date', 'length','owner', 'total_w', 'time_minutes', 'mac_plast_w','mic_plas_w', 'area')
 class SurveyAdminViews(SurveyAdminData):
     class Meta:
         proxy = True
