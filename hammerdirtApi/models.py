@@ -568,7 +568,7 @@ class SurveyAdminData(OwnedModel):
         blank=True,
         null=True
         )
-    non_plas_w = models.DecimalField(
+    total_w = models.DecimalField(
         db_column='non_plas_w',
         max_digits=5,
         decimal_places=3,
@@ -589,6 +589,12 @@ class SurveyAdminData(OwnedModel):
         default=1
         )
     num_parts_other = models.IntegerField(
+        db_column='num_parts_other',
+        blank=False,
+        null=False,
+        default=0
+        )
+    time_minutes = models.IntegerField(
         db_column='num_parts_other',
         blank=False,
         null=False,
