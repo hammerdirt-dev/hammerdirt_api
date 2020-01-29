@@ -13,7 +13,19 @@ from rest_framework.authtoken.models import Token
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
-
+PARTICIPATING = [
+    ("stopp", "Stop Plastic"),
+    ("hd", "hammerdirt!"),
+    ("wwf", "World Wildlife Fund"),
+    ("pp", "Precious Plastic Léman"),
+    ("eg", "Ecole International Genève"),
+    ("ha", "Hackuarium"),
+    ("asl", "Association Sauvegarde du Léman"),
+]
+PROJECT = [
+    ("SLR", "Swiss Litter Report"),
+    ("MCBP", "Montreux Clean Beach"),    
+]
 class CustomUser(AbstractUser):
     def user_image_path(instance, filename):
         a = slugify(instance.username)
@@ -181,6 +193,7 @@ class Beaches(OwnedModel):
         blank=False,
         default=''
         )
+    is_2020 = models.BooleanField(db_column='is_2020', default=False)
     objects = models.Manager()
     swiss_beaches = SwissLocations()
     def swiss_categories():
@@ -528,6 +541,7 @@ class SurveyAdminData(OwnedModel):
     """
     The survey results by item code.
     """
+
     location = models.ForeignKey(
         Beaches,
         db_column='location',
@@ -600,6 +614,15 @@ class SurveyAdminData(OwnedModel):
         null=False,
         default=0
         )
+    participating = JSONField()
+    project=models.CharField(
+        db_column='project',
+        max_length=30,
+        blank=True,
+        default="slr",
+        choices=PROJECT
+        )
+    is_2020 = models.BooleanField(db_column='is_2020', default=False)
     def __str__(self):
         return u"location:%s, date:%s, length:%s"%(self.location, self.date,self.length)
     class Meta:

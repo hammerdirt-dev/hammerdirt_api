@@ -3,7 +3,6 @@ from django.contrib.admin import SimpleListFilter
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import (
     CustomUser,
@@ -20,7 +19,6 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     model = CustomUser
     filter_horizontal = ('groups', 'user_permissions')
-
     fieldsets = (
         ('User', {'fields':
                     ('username',
@@ -72,7 +70,7 @@ class BeachesAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.owner = request.user
         super().save_model(request, obj, form, change)
-    readonly_fields = ('owner', 'slug')
+    readonly_fields = ('owner', 'slug', 'water_name_slug', 'city_slug')
 admin.site.register(Beaches, BeachesAdmin)
 
 class CodesAdmin(admin.ModelAdmin):
