@@ -10,7 +10,6 @@ from hammerdirtApi.models import (
 )
 from django.contrib.auth import get_user_model
 
-
 class ArticleCommentSerializer(serializers.ModelSerializer):
     owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
@@ -37,20 +36,7 @@ class BeachesSerializer(serializers.ModelSerializer):
     owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Beaches
-        fields = [
-            "location",
-            "latitude",
-            "longitude",
-            "city",
-            "post",
-            "country",
-            "water",
-            "water_name",
-            "slug",
-            "city_slug",
-            "water_name_slug",
-            "owner"
-            ]
+        fields = '__all__'
 class SurveySerializer(serializers.ModelSerializer):
     owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
     print("called serializer")
