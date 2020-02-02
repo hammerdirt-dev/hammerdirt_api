@@ -24,7 +24,7 @@ PARTICIPATING = [
 ]
 PROJECT = [
     ("SLR", "Swiss Litter Report"),
-    ("MCBP", "Montreux Clean Beach"),    
+    ("MCBP", "Montreux Clean Beach"),
 ]
 class CustomUser(AbstractUser):
     def user_image_path(instance, filename):
@@ -275,13 +275,13 @@ class LitterDataPieces(OwnedModel):
         blank=True,
         null=True
         )
-    pcs_m_squared=models.DecimalField(
-        db_column='pcs_m_squared',
-        max_digits=6,
-        decimal_places=2,
-        blank=True,
-        null=True
-        )
+    # pcs_m_squared=models.DecimalField(
+    #     db_column='pcs_m_squared',
+    #     max_digits=6,
+    #     decimal_places=2,
+    #     blank=True,
+    #     null=True
+    #     )
     code = models.ForeignKey(
         Codes,
         db_column='code',
@@ -539,9 +539,8 @@ class ArticleComment(OwnedModel):
         verbose_name_plural = 'Article comments'
 class SurveyAdminData(OwnedModel):
     """
-    The survey results by item code.
+    Dimensional and participation data for a survey.
     """
-
     location = models.ForeignKey(
         Beaches,
         db_column='location',
