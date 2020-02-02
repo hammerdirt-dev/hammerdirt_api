@@ -25,6 +25,8 @@ PARTICIPATING = [
 PROJECT = [
     ("SLR", "Swiss Litter Report"),
     ("MCBP", "Montreux Clean Beach"),
+    ("GL", "Grand Lac"),
+    ("2020", "Project 2020"),
 ]
 class CustomUser(AbstractUser):
     def user_image_path(instance, filename):
@@ -554,6 +556,7 @@ class SurveyAdminData(OwnedModel):
         null=False,
         default=datetime.date.today
         )
+
     length = models.IntegerField(
         db_column='length',
         blank=False,
@@ -613,12 +616,12 @@ class SurveyAdminData(OwnedModel):
         null=False,
         default=0
         )
-    participating = JSONField()
+    participants = JSONField()
     project=models.CharField(
         db_column='project',
         max_length=30,
         blank=True,
-        default="slr",
+        default="2020",
         choices=PROJECT
         )
     is_2020 = models.BooleanField(db_column='is_2020', default=False)
