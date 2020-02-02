@@ -633,7 +633,8 @@ class SurveyAdminData(OwnedModel):
         default=''
         )
     def save(self, *args, **kwargs):
-        a_key = '{}{}{}'.format(self.location,self.date, self.length)
+        a_key = '{}{}{}'.format(self.location.slug,self.date, self.length)
+        print(a_key)
         self.survey_key = a_key
         super().save(*args, **kwargs)
     def __str__(self):
