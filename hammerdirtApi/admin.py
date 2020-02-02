@@ -112,12 +112,12 @@ class DraftArticlesAdmin(admin.ModelAdmin):
     readonly_fields = ('owner','slug')
 admin.site.register(DraftArticles, DraftArticlesAdmin)
 class SurveyAdminDataAdmin(admin.ModelAdmin):
-    search_fields = ('subject', )
+    search_fields = ('location', )
     list_filter =('owner','location' )
     def save_model(self, request, obj, form, change):
         obj.owner = request.user
         super().save_model(request, obj, form, change)
-    readonly_fields = ('owner',)
+    readonly_fields = ('owner','survey_key')
 admin.site.register(SurveyAdminData, SurveyAdminDataAdmin)
 
 class ArticleCommentAdmin(admin.ModelAdmin):
