@@ -625,6 +625,17 @@ class SurveyAdminData(OwnedModel):
         choices=PROJECT
         )
     is_2020 = models.BooleanField(db_column='is_2020', default=False)
+    survey_key = models.CharField(
+        unique=True,
+        primary_key=True,
+        max_length=100,
+        blank=False,
+        default=''
+        )
+    def save(self, *args, **kwargs):
+        a_key = '{}{}{}'.format(self.location,self.date, self.length)
+        self.survey_key = a_key
+        super().save(*args, **kwargs)
     def __str__(self):
         return u"location:%s, date:%s, length:%s"%(self.location, self.date,self.length)
     class Meta:
