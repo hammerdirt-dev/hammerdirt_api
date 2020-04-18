@@ -572,7 +572,7 @@ class SurveyAdminData(OwnedModel):
         )
     mac_plast_w = models.DecimalField(
         db_column='mac_plast_w',
-        max_digits=5,
+        max_digits=8,
         decimal_places=3,
         blank=True,
         null=True
@@ -580,13 +580,13 @@ class SurveyAdminData(OwnedModel):
     mic_plas_w = models.DecimalField(
         db_column='mic_plas_w',
         max_digits=7,
-        decimal_places=5,
+        decimal_places=3,
         blank=True,
         null=True
         )
     total_w = models.DecimalField(
         db_column='non_plas_w',
-        max_digits=5,
+        max_digits=6,
         decimal_places=3,
         blank=True,
         null=True
