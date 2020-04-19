@@ -40,8 +40,6 @@ class LocationFilter(SimpleListFilter):
     title = 'Location of interest' # a label for our filter
     parameter_name = 'pages' # you can put anything here
     list_of_lakes = Beaches.objects.order_by().values_list('water_name', flat=True).distinct()
-    print(len(list_of_lakes))
-    print(list_of_lakes)
     def lookups(self, request, model_admin):
         """
         Returns a list of tuples. The first element in each

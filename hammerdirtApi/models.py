@@ -109,7 +109,6 @@ class OwnedModel(models.Model):
     class Meta:
         abstract=True
 class SwissLocations(models.Manager):
-    print("calling swiss locations")
     def get_queryset(self):
         return super().get_queryset().filter(country="CH")
 class Beaches(OwnedModel):
@@ -231,9 +230,10 @@ class Codes(OwnedModel):
     description = models.CharField(db_column='description', max_length=100, blank=False, null=False, default='Describe the item')
     source = models.CharField(db_column='source', max_length=30, blank=False, null=False, default='Where does it come from')
     source_two = models.CharField(db_column='source_two', max_length=30, blank=False, null=False, default='Where does it come from')
+    source_three = models.CharField(db_column='source_three', max_length=30, blank=False, null=False, default='Where does it come from')
     single_use = models.BooleanField(db_column='single_use', default=False)
     micro = models.BooleanField(db_column='micro', default=False)
-
+    ospar_code = models.CharField(db_column='ospar_code', max_length=10, blank=False, null=False, default='Ospar...')
     def __str__(self):
         return u'%s, %s' %(self.description, self.code)
     class Meta:
@@ -277,13 +277,6 @@ class LitterDataPieces(OwnedModel):
         blank=True,
         null=True
         )
-    # pcs_m_squared=models.DecimalField(
-    #     db_column='pcs_m_squared',
-    #     max_digits=6,
-    #     decimal_places=2,
-    #     blank=True,
-    #     null=True
-    #     )
     code = models.ForeignKey(
         Codes,
         db_column='code',
@@ -391,7 +384,6 @@ class SwissPiecesPerMeterLocation(LitterDataPieces):
     beach_daily_quantity = SwissBeachDailyQuanity()
     class Meta:
         proxy = True
-#
 class References(OwnedModel):
     """
     The library or reading list for hammerdirt projects and articles.
@@ -558,12 +550,14 @@ class SurveyAdminData(OwnedModel):
         )
 
     length = models.IntegerField(
+        # entered in meters
         db_column='length',
         blank=False,
         null=False,
         default=1
         )
     area = models.DecimalField(
+        # area in meters squared
         db_column='area',
         max_digits=6,
         decimal_places=2,
@@ -571,6 +565,7 @@ class SurveyAdminData(OwnedModel):
         null=True
         )
     mac_plast_w = models.DecimalField(
+        # entered in grams
         db_column='mac_plast_w',
         max_digits=8,
         decimal_places=3,
@@ -578,6 +573,7 @@ class SurveyAdminData(OwnedModel):
         null=True
         )
     mic_plas_w = models.DecimalField(
+        # entered in grams
         db_column='mic_plas_w',
         max_digits=7,
         decimal_places=3,
@@ -585,6 +581,7 @@ class SurveyAdminData(OwnedModel):
         null=True
         )
     total_w = models.DecimalField(
+        # entered in kilograms
         db_column='non_plas_w',
         max_digits=6,
         decimal_places=3,
@@ -592,6 +589,7 @@ class SurveyAdminData(OwnedModel):
         null=True
         )
     est_weight = models.DecimalField(
+        # entered in kilograms
         db_column='est_weight',
         max_digits=4,
         decimal_places=1,
@@ -634,7 +632,6 @@ class SurveyAdminData(OwnedModel):
         )
     def save(self, *args, **kwargs):
         a_key = '{}{}{}'.format(self.location.slug,self.date, self.length)
-        print(a_key)
         self.survey_key = a_key
         super().save(*args, **kwargs)
     def __str__(self):

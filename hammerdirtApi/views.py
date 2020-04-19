@@ -218,7 +218,6 @@ class SurveyList(generics.CreateAPIView):
     """
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = SurveySerializer
-    print("called survey list")
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
