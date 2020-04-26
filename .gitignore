@@ -59,6 +59,7 @@ hammerdirt_api/local_settings.py
 hammerdirt_api/settings.py
 datatoinput.txt
 hammerdirtApi/oldmigrations/**
+api_notes.txt
 
 # Flask stuff:
 instance/

@@ -300,9 +300,9 @@ class LitterDataPieces(OwnedModel):
 class CityCodeTotals(models.Manager):
     def get_queryset(self):
         return super().get_queryset().values("location__city", "code").annotate(total = Sum("quantity"))
-class PostCodeTotals(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().values("location__post", "code").annotate(total = Sum("quantity"))
+# class PostCodeTotals(models.Manager):
+#     def get_queryset(self):
+#         return super().get_queryset().values("location__post", "code").annotate(total = Sum("quantity"))
 class GroupedLocationsCode(models.Manager):
     def get_queryset(self):
         return super().get_queryset().values_list("location", "date", "code", "pcs_m", "quantity").order_by('-date','location')
@@ -321,7 +321,7 @@ class PiecesPerMeterLocation(LitterDataPieces):
     """
     objects = models.Manager()
     city_code_totals = CityCodeTotals()
-    post_code_totals = PostCodeTotals()
+    # post_code_totals = PostCodeTotals()
     code_data = GroupedLocationsCode()
     location_code_totals = LocationCodeTotals()
     beach_daily_pcsM = BeachDailyPcsM()
@@ -330,7 +330,7 @@ class PiecesPerMeterLocation(LitterDataPieces):
         proxy = True
 class BeachesForGrouping(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().values_list('water_name','city','post','country','slug')
+        return super().get_queryset().values_list('water_name','city','country','slug')
 class Lakes(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(water='l').order_by("water_name").values_list("water_name", flat=True).distinct()
@@ -340,9 +340,10 @@ class Rivers(models.Manager):
 class Cities(models.Manager):
     def get_queryset(self):
         return super().get_queryset().order_by("city").values_list('city', flat=True).distinct()
-class PostalCodes(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().order_by("post").values_list('post', flat=True).distinct()
+# removed for lack of use
+# class PostalCodes(models.Manager):
+#     def get_queryset(self):
+#         return super().get_queryset().order_by("post").values_list('post', flat=True).distinct()
 class BeachesByCategory(Beaches):
     class Meta:
         proxy = True
@@ -351,14 +352,14 @@ class BeachesByCategory(Beaches):
     lakes = Lakes()
     rivers = Rivers()
     cities = Cities()
-    postal_codes = PostalCodes()
+    # postal_codes = PostalCodes()
 # begin Switzerland only
 class SwissCityCodeTotals(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(location__country='CH').values("location__city", "code").annotate(total = Sum("quantity"))
-class SwissPostCodeTotals(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(location__country='CH').values("location__post", "code").annotate(total = Sum("quantity"))
+# class SwissPostCodeTotals(models.Manager):
+#     def get_queryset(self):
+#         return super().get_queryset().filter(location__country='CH').values("location__post", "code").annotate(total = Sum("quantity"))
 class SwissGroupedLocationsCode(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(location__country='CH').values_list("location", "date", "code", "pcs_m", "quantity").order_by('-date','location')
@@ -377,7 +378,7 @@ class SwissPiecesPerMeterLocation(LitterDataPieces):
     """
     objects = models.Manager()
     city_code_totals = SwissCityCodeTotals()
-    post_code_totals = SwissPostCodeTotals()
+    # post_code_totals = SwissPostCodeTotals()
     code_data = SwissGroupedLocationsCode()
     location_code_totals = SwissLocationCodeTotals()
     beach_daily_pcsM = SwissBeachDailyPcsM()

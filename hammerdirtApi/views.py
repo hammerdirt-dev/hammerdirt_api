@@ -1,9 +1,6 @@
 """
 Views for the hammerdirt API:
-
 These views are for the hammerdirt web app and api.
-
-
 """
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
@@ -20,6 +17,7 @@ from .serializers import (
     ArticleCommentSerializer,
     DimDataSerializer
 )
+import django_filters
 import json
 from .models import (
     Codes,
@@ -38,11 +36,21 @@ from .models import (
 )
 from rest_framework.renderers import JSONRenderer
 from rest_framework import (
-    generics
+    generics,
+    filters
 )
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.views import (
     APIView
+)
+from django_filters import (
+    AllValuesFilter,
+    # DateTimeFilter,
+    DateFilter,
+    NumberFilter,
+    CharFilter,
+    IsoDateTimeFilter,
+    # IsoDateTimeFromToRangeFilter,
 )
 from rest_framework.response import Response
 from rest_framework.permissions import (
@@ -93,6 +101,15 @@ class ArticleUpdate(generics.RetrieveUpdateAPIView):
     lookup_field = "slug"
     serializer_class = DraftArticleSerializer
 
+class ArticleFilter(django_filters.FilterSet):
+    last_edit = IsoDateTimeFilter(field_name="last_edit", lookup_expr='gte')
+    subject = CharFilter(field_name="subject", lookup_expr="exact")
+    class Meta:
+        model= DraftArticles
+        fields = [
+            'last_edit',
+            'subject'
+        ]
 class ArticleListView(generics.ListAPIView):
     """
     Returns an array of article objects:
@@ -107,8 +124,42 @@ class ArticleListView(generics.ListAPIView):
         "slug": "the-article-title"
     }...{"For all articles in the database"}
     """
-    queryset = DraftArticles.objects.all().order_by('-date_created')
+    queryset = DraftArticles.objects.all()
     serializer_class = DraftArticleSerializer
+    filter_class = ArticleFilter
+class SurveyResultsFilter(django_filters.FilterSet):
+    date = DateFilter(field_name="date", lookup_expr="gte")
+    location_country = CharFilter(field_name="location__country", lookup_expr="exact")
+
+
+    class Meta:
+        model =  LitterDataPieces
+        fields =[
+        'date',
+        'location'
+        ]
+class SurveyResultsListView(generics.ListAPIView):
+    queryset =  LitterDataPieces.objects.all()
+    serializer_class = SurveySerializer
+    filter_class = SurveyResultsFilter
+
+
+class DimsDataFilter(django_filters.FilterSet):
+    date = DateFilter(field_name="date", lookup_expr="gte")
+    location = CharFilter(field_name="location", lookup_expr="exact")
+
+    class Meta:
+        model =  SurveyAdminData
+        fields =[
+        'date',
+        'location'
+        ]
+class DimsDataListView(generics.ListAPIView):
+    queryset =  SurveyAdminData.objects.all()
+    serializer_class = DimDataSerializer
+    filter_class = DimsDataFilter
+
+
 class ArticleCommentView(APIView):
     """
     Returns an array of article-comment objects:
@@ -128,7 +179,16 @@ class ArticleCommentCreate(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = ArticleComment.objects.all()
     serializer_class = ArticleCommentSerializer
+class CodeListFilter(django_filters.FilterSet):
+    source = CharFilter(field_name="source", lookup_expr="exact")
+    material = CharFilter(field_name="material", lookup_expr="exact")
 
+    class Meta:
+        model =  Codes
+        fields =[
+        'source',
+        'material'
+        ]
 class CodeList(generics.ListAPIView):
     """
     Returns an array of MLW code objects:
@@ -142,6 +202,7 @@ class CodeList(generics.ListAPIView):
     """
     queryset = Codes.objects.all()
     serializer_class = CodesSerializer
+    filter_class = CodeListFilter
 class CodeDetail(generics.RetrieveAPIView):
     """
     Returns the detail for one MLW code object:
@@ -252,62 +313,8 @@ class UserData(generics.ListAPIView):
 # Custom views for the app
 # these views generate JSON objects for indexedDB
 # the results are processed by the front end
-# ther are not attached to a serializer
 
-class ViewPostCodeTotals(APIView):
-    """
-    Returns an array of post-code code total objects. Each object contains the total count for the MLW
-    codes indentified within a postal-code:
 
-    [{
-    "location": "1000", //Postal code
-    "results": [
-       {
-           "code": "G100",
-           "total": 185
-       },
-       {
-           "code": "G11",
-           "total": 11
-       } .... {"for all MLW codes identified within the postal-code"},
-    }...("For all postal codes")]
-
-    """
-    daily_totals = PiecesPerMeterLocation.post_code_totals.all()
-    def get(self, request, *args, **kwargs):
-        pieces = self.daily_totals
-        def make_dict(self,a):
-            new={}
-            for element in a:
-                if element['location__post'] in list(new.keys()):
-                    new[element['location__post']].append({'code':element['code'], 'total':element['total']})
-                else:
-                    new.update({element['location__post']:[{'code':element['code'], 'total':element['total']}]})
-            return new
-        piecesX = make_dict(self, pieces)
-        pieceKeys = list(piecesX.keys())
-        theJson = [{'location':x, 'results':piecesX[x]} for x in pieceKeys]
-        return Response(theJson)
-class ViewSwissPostCodeTotals(APIView):
-    """
-    Returns an array of post-code code total objects. Each object contains the total count for the MLW
-    codes indentified within a postal-code. Same structure as ViewPostCodeTotals.
-    """
-    daily_totals = SwissPiecesPerMeterLocation.post_code_totals.all()
-    def get(self, request, *args, **kwargs):
-        pieces = self.daily_totals
-        def make_dict(self,a):
-            new={}
-            for element in a:
-                if element['location__post'] in list(new.keys()):
-                    new[element['location__post']].append({'code':element['code'], 'total':element['total']})
-                else:
-                    new.update({element['location__post']:[{'code':element['code'], 'total':element['total']}]})
-            return new
-        piecesX = make_dict(self, pieces)
-        pieceKeys = list(piecesX.keys())
-        theJson = [{'location':x, 'results':piecesX[x]} for x in pieceKeys]
-        return Response(theJson)
 class ViewSwissCityCodeTotals(APIView):
     """
     Returns an array of city code total objects. Each object contains the total count for the MLW
@@ -581,6 +588,7 @@ class ViewSwissCodeTotalsByBeachAndDay(APIView):
     ViewCodeTotalsByBeachAndDay.
     """
     daily_totals = SwissPiecesPerMeterLocation.code_data.all()
+
     def get(self, request, *args, **kwargs):
         pieces = self.daily_totals
         def make_dict(self,a):
@@ -627,7 +635,7 @@ class ViewBeachCategories(APIView):
     rivers = list(BeachesByCategory.rivers.all())
     lakes = list(BeachesByCategory.lakes.all())
     cities = list(BeachesByCategory.cities.all())
-    postal = list(BeachesByCategory.postal_codes.all())
+    # postal = list(BeachesByCategory.postal_codes.all())
     def get(self, request, *args, **kwargs):
         def make_dict(self):
             the_dict = [{
@@ -658,7 +666,7 @@ class ViewSwissBeachCategories(APIView):
     rivers = list(Beaches.swiss_rivers())
     lakes = list(Beaches.swiss_lakes())
     cities = list(Beaches.swiss_cities())
-    postal = list(Beaches.swiss_post())
+    # postal = list(Beaches.swiss_post())
     def get(self, request, *args, **kwargs):
         def make_dict(self):
             the_dict = [{
@@ -668,10 +676,6 @@ class ViewSwissBeachCategories(APIView):
                 {
                 'category':'cities',
                 'results':self.cities
-                },
-                {
-                'category':'post',
-                'results':self.postal
                 },
                 {
                 'category':'rivers',
