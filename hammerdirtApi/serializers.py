@@ -31,7 +31,6 @@ class DimDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = SurveyAdminData
         fields = '__all__'
-
 class BeachesSerializer(serializers.ModelSerializer):
     owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
@@ -49,7 +48,6 @@ class ViewCustomUserSerializer(GetUserData):
     class Meta:
         model = get_user_model()
         exclude = ('password', 'is_superuser', 'is_active', 'is_staff')
-
 class LocationCodesTotalSerializer(serializers.Serializer):
     location__water_name = serializers.CharField(max_length=200)
     code = serializers.CharField(max_length=20)
