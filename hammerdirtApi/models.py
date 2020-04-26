@@ -234,6 +234,8 @@ class Codes(OwnedModel):
     single_use = models.BooleanField(db_column='single_use', default=False)
     micro = models.BooleanField(db_column='micro', default=False)
     ospar_code = models.CharField(db_column='ospar_code', max_length=10, blank=False, null=False, default='Ospar...')
+
+
     def __str__(self):
         return u'%s, %s' %(self.description, self.code)
     class Meta:
@@ -283,6 +285,18 @@ class LitterDataPieces(OwnedModel):
         null=True,
         on_delete=models.DO_NOTHING
         )
+    new_key = models.CharField(
+        db_column='new_key',
+        unique=True,
+        primary_key=True,
+        max_length=100,
+        blank=False,
+        default=''
+        )
+    def a_new_key(self):
+        a_key = '{}{}{}'.format(self.location,self.date,self.code)
+        return a_key
+
     def __str__(self):
         return u"date:%s, source:%s, location:%s, length:%s, quantity:%s, code:%s, " %(self.date, self.code.source, self.location, self.length, self.quantity, self.code  )
     def pcs_meter(self):
@@ -291,6 +305,7 @@ class LitterDataPieces(OwnedModel):
         return pieces_rounded
     def save(self, *args, **kwargs):
         self.pcs_m = self.pcs_meter()
+        self.new_key = self.a_new_key()
         super().save(*args, **kwargs)
     class Meta:
         get_latest_by = 'date'
