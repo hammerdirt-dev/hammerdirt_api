@@ -502,9 +502,10 @@ class ViewBeachesByCategory(APIView):
             new={}
             for element in a:
              if element[n] in new.keys():
-                 new[element[n]].append(element[4])
+                 print(element)
+                 new[element[n]].append(element[3])
              else:
-                 new.update({element[n]:[element[4]]})
+                 new.update({element[n]:[element[3]]})
             return new
         def combined(self):
             new = {}
@@ -646,10 +647,10 @@ class ViewBeachCategories(APIView):
                 'category':'cities',
                 'results':self.cities
                 },
-                {
-                'category':'post',
-                'results':self.postal
-                },
+                # {
+                # 'category':'post',
+                # 'results':self.postal
+                # },
                 {
                 'category':'rivers',
                 'results':self.rivers

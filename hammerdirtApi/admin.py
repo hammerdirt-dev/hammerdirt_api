@@ -89,7 +89,7 @@ class LitterDataPiecesAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.owner = request.user
         super().save_model(request, obj, form, change)
-    readonly_fields = ('owner',)
+    readonly_fields = ('owner','new_key')
 admin.site.register(LitterDataPieces, LitterDataPiecesAdmin)
 
 class ReferencesAdmin(admin.ModelAdmin):

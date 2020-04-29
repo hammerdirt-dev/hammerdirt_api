@@ -237,7 +237,7 @@ class Codes(OwnedModel):
 
 
     def __str__(self):
-        return u'%s, %s' %(self.description, self.code)
+        return u'%s' %(self.code)
     class Meta:
         managed = True
         db_table = 'codes'
@@ -294,7 +294,7 @@ class LitterDataPieces(OwnedModel):
         default=''
         )
     def a_new_key(self):
-        a_key = '{}{}{}'.format(self.location,self.date,self.code)
+        a_key = '{}{}{}'.format(self.location.slug,self.date,self.code)
         return a_key
 
     def __str__(self):
